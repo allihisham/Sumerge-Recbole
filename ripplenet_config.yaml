@@ -1,0 +1,46 @@
+# Dataset settings
+dataset: music_dataset
+data_path: ./dataset/  # Path to your data files
+
+# Model settings
+model: RippleNet
+user_inter_num_interval: "[5, 1000000]"   # Reduce lower bound to avoid extremely sparse users
+item_inter_num_interval: "[5, 1000000]"
+
+# RippleNet specific parameters
+embedding_size: 64
+kg_embedding_size: 64
+n_hop: 2
+kge_weight: 0.01
+l2_weight: 0.0001
+lr: 0.005            # Lower LR for more stable CPU convergence
+n_memory: 32
+
+# Training settings
+epochs: 100
+train_batch_size: 256     # CPU-friendly batch size
+eval_batch_size: 512
+learning_rate: 0.005
+weight_decay: 0.0001
+stopping_step: 7          # Early stop after 7 epochs without improvement
+
+# Evaluation settings
+eval_args:
+  split: {'RS': [0.8, 0.1, 0.1]}
+  group_by: user
+  order: TO
+  mode: full
+
+metrics: ['Recall', 'MRR', 'NDCG', 'Hit', 'Precision']
+topk: [5, 10, 20]
+valid_metric: MRR@10       # Monitor this for early stopping
+eval_step: 1               # Evaluate every epoch
+
+# Other settings
+gpu_id: -1
+use_gpu: False
+seed: 2020
+reproducibility: True
+
+# Checkpoint
+checkpoint_dir: checkpoint/

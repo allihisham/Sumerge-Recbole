@@ -1,0 +1,40 @@
+
+dataset: music
+USER_ID_FIELD: user_id:token
+ITEM_ID_FIELD: item_id:token
+HEAD_ENTITY_ID_FIELD: head_id:token
+TAIL_ENTITY_ID_FIELD: tail_id:token
+RELATION_ID_FIELD: relation_id:token
+ENTITY_ID_FIELD: entity_id:token
+load_col:
+    inter: [user_id:token, item_id:token, timestamp:float, liked:float, isSkipped:float]
+    kg: [head_id:token, relation_id:token, tail_id:token]
+    link: [item_id:token, entity_id:token]
+
+# Model config for RippleNet
+model: RippleNet
+embedding_size: 64
+n_hops: 2
+n_memory: 32
+ripples: 2
+reg_weight: 1e-5
+
+# Training and evaluation config
+eval_args:
+   split: {'RS': [0.8, 0.1, 0.1]}  # 80% train, 10% validation, 10% test
+   group_by: user
+   order: RO
+   mode: full
+metrics: ['Recall', 'MRR', 'NDCG', 'Hit', 'Precision']
+topk: 10
+valid_metric: MRR@10
+train_batch_size: 2048
+eval_batch_size: 4096
+epochs: 50  # Number of training epochs
+learning_rate: 0.001  # Learning rate for optimizer
+train_neg_sample_args: 
+   distribution: uniform
+   sample_num: 1
+stopping_step: 10  # Early stopping if valid_metric doesn't improve for 10 epochs
+log_wandb: False  # Disable Weights & Biases logging (optional)
+gpu_id: 0  # GPU to use (0 for first GPU, -1 for CPU)
