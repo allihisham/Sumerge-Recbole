@@ -14,6 +14,3 @@ docs/build/
 wandb/*
 /ray_log*
 
-*.lib
-*.dll
-venv/
